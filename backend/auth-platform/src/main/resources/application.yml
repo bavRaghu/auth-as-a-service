@@ -2,5 +2,16 @@ spring:
   application:
     name: auth-platform
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/auth_platform
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+
 server:
   port: 8081
