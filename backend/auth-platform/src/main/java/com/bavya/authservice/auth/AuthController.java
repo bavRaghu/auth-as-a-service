@@ -24,4 +24,9 @@ public class AuthController {
     ) {
         return authService.login(request);
     }
+
+    @GetMapping("/me")
+    public MeResponse me() {
+        return authService.me();
+    }
 }

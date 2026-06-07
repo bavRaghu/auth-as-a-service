@@ -4,6 +4,7 @@ import com.bavya.authservice.jwt.JwtService;
 import com.bavya.authservice.user.User;
 import com.bavya.authservice.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,5 +56,16 @@ public class AuthService {
                 );
 
         return new LoginResponse(token);
+    }
+
+    public MeResponse me() {
+
+        String email =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        return new MeResponse(email);
     }
 }
