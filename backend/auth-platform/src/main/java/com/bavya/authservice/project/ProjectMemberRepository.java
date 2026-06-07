@@ -21,4 +21,9 @@ public interface ProjectMemberRepository
             User user
     );
 
+    Optional<ProjectMember>
+    findByProjectIdAndUserId(
+            Long projectId,
+            User userId
+    );
 }

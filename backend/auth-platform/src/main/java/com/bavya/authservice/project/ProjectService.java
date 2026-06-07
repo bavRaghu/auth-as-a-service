@@ -198,4 +198,42 @@ public class ProjectService {
                 )
                 .toList();
     }
+
+    public void updateRole(
+            Long projectId,
+            User userId,
+            UpdateRoleRequest request
+    ) {
+
+        String email =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        User currentUser =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow();
+
+        requireOwner(
+                projectId,
+                currentUser
+        );
+
+        ProjectMember member =
+                projectMemberRepository
+                        .findByProjectIdAndUser(
+                                projectId,
+                                userId
+                        )
+                        .orElseThrow();
+
+        member.setRole(
+                request.role()
+        );
+
+        projectMemberRepository
+                .save(member);
+    }
 }

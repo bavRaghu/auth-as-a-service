@@ -1,5 +1,6 @@
 package com.bavya.authservice.project;
 
+import com.bavya.authservice.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -40,6 +41,20 @@ public class ProjectController {
     ) {
         return projectService.getMembers(
                 projectId
+        );
+    }
+
+    @PatchMapping("/{projectId}/members/{userId}")
+    public void updateRole(
+            @PathVariable Long projectId,
+            @PathVariable User userId,
+            @RequestBody UpdateRoleRequest request
+    ) {
+
+        projectService.updateRole(
+                projectId,
+                userId,
+                request
         );
     }
 }
