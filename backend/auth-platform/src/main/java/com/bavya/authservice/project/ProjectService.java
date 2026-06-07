@@ -73,4 +73,95 @@ public class ProjectService {
                         ))
                 .toList();
     }
+
+    private ProjectMember getMembership(
+            Long projectId,
+            User user
+    ) {
+        return projectMemberRepository
+                .findByProjectIdAndUser(
+                        projectId,
+                        user
+                )
+                .orElseThrow(
+                        () -> new RuntimeException(
+                                "Not a member of project"
+                        )
+                );
+    }
+
+    private void requireOwner(
+            Long projectId,
+            User user
+    ) {
+
+        ProjectMember membership =
+                getMembership(
+                        projectId,
+                        user
+                );
+
+        if (membership.getRole()
+                != Role.OWNER) {
+
+            throw new RuntimeException(
+                    "Only owners can perform this action"
+            );
+        }
+    }
+
+    public void addMember(
+            Long projectId,
+            AddMemberRequest request
+    ) {
+        System.out.println("ADD MEMBER ENDPOINT HIT");
+
+        String currentEmail =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        User currentUser =
+                userRepository
+                        .findByEmail(currentEmail)
+                        .orElseThrow();
+
+        requireOwner(
+                projectId,
+                currentUser
+        );
+
+        User targetUser =
+                userRepository
+                        .findByEmail(request.email())
+                        .orElseThrow();
+
+        if (
+                projectMemberRepository
+                        .existsByProjectIdAndUser(
+                                projectId,
+                                targetUser
+                        )
+        ) {
+            throw new RuntimeException(
+                    "Already a member"
+            );
+        }
+
+        Project project =
+                projectRepository
+                        .findById(projectId)
+                        .orElseThrow();
+
+        ProjectMember membership =
+                new ProjectMember();
+
+        membership.setUser(targetUser);
+        membership.setProject(project);
+        membership.setRole(request.role());
+
+        projectMemberRepository
+                .save(membership);
+    }
 }

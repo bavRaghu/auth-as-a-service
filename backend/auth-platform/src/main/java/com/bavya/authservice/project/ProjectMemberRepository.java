@@ -12,4 +12,9 @@ public interface ProjectMemberRepository
             Long projectId,
             User user
     );
+
+    boolean existsByProjectIdAndUser(
+            Long projectId,
+            User user
+    );
 }

@@ -22,4 +22,15 @@ public class ProjectController {
     ) {
         return projectService.createProject(request);
     }
+
+    @PostMapping("/{projectId}/members")
+    public void addMember(
+            @PathVariable Long projectId,
+            @RequestBody AddMemberRequest request
+    ) {
+        projectService.addMember(
+                projectId,
+                request
+        );
+    }
 }
