@@ -2,6 +2,7 @@ package com.bavya.authservice.project;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -11,8 +12,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public String test() {
-        return "Projects endpoint working";
+    public List<ProjectResponse> getProjects() {
+        return projectService.getProjects();
     }
 
     @PostMapping
