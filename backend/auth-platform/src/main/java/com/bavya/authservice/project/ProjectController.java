@@ -57,4 +57,16 @@ public class ProjectController {
                 request
         );
     }
+
+    @DeleteMapping("/{projectId}/members/{userId}")
+    public void removeMember(
+            @PathVariable Long projectId,
+            @PathVariable Long userId
+    ) {
+
+        projectService.removeMember(
+                projectId,
+                userId
+        );
+    }
 }

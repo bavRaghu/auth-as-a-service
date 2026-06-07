@@ -236,4 +236,47 @@ public class ProjectService {
         projectMemberRepository
                 .save(member);
     }
+
+    public void removeMember(
+            Long projectId,
+            Long userId
+    ) {
+
+        String email =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        User currentUser =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow();
+
+        requireOwner(
+                projectId,
+                currentUser
+        );
+
+        User targetUser =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow();
+
+        ProjectMember member =
+                projectMemberRepository
+                        .findByProjectIdAndUser(
+                                projectId,
+                                targetUser
+                        )
+                        .orElseThrow();
+
+        if (member.getRole() == Role.OWNER) {
+            throw new RuntimeException(
+                    "Cannot remove owner"
+            );
+        }
+
+        projectMemberRepository.delete(member);
+    }
 }
