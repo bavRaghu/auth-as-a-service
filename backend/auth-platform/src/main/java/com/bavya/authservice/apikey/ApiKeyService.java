@@ -136,7 +136,9 @@ public class ApiKeyService {
                 .map(key ->
                         new ApiKeySummaryResponse(
                                 key.getId(),
-                                key.getName()
+                                key.getName(),
+                                key.getCreatedAt(),
+                                key.getLastUsedAt()
                         )
                 )
                 .toList();
@@ -178,6 +180,17 @@ public class ApiKeyService {
                 apiKeyRepository
                         .findById(apiKeyId)
                         .orElseThrow();
+
+        if (
+                !apiKey.getProject()
+                        .getId()
+                        .equals(projectId)
+        ) {
+
+            throw new RuntimeException(
+                    "API key does not belong to project"
+            );
+        }
 
         apiKeyRepository.delete(apiKey);
     }
