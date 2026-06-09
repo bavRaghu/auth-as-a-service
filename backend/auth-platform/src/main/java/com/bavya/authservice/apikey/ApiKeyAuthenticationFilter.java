@@ -17,13 +17,11 @@ public class ApiKeyAuthenticationFilter
         extends OncePerRequestFilter {
 
     private final ApiKeyService apiKeyService;
-    private final RateLimitService rateLimitService;
 
     public ApiKeyAuthenticationFilter(
             ApiKeyService apiKeyService, RateLimitService rateLimitService
     ) {
         this.apiKeyService = apiKeyService;
-        this.rateLimitService = rateLimitService;
     }
 
     @Override
@@ -40,22 +38,6 @@ public class ApiKeyAuthenticationFilter
                 );
 
         if (apiKey != null) {
-
-            boolean allowed =
-                    rateLimitService
-                            .allowRequest(apiKey);
-
-            if (!allowed) {
-
-                response.setStatus(429);
-
-                response.getWriter()
-                        .write(
-                                "Rate limit exceeded"
-                        );
-
-                return;
-            }
 
             try {
 
